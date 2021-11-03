@@ -4,9 +4,7 @@ This directory contains an example that uses Protocol Buffers with C#
 
 ## Pre-requisites
 
-Install the compiler for protobuf
-
-	$ sudo apt install protobuf-compiler 
+Install the compiler for protobuf. In Windows it can be downloaded from the [release page](https://github.com/protocolbuffers/protobuf/releases/tag/v3.19.1). Decompress it, and add the bin folder to the `path` environmental variable.
 
 ## Protocol Buffer Message Compilation
 
