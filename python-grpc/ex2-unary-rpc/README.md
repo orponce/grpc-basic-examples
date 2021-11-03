@@ -1,4 +1,4 @@
-## Basic Example
+## Example showing a Unary RPC in Python
 
 Compile the `.proto` file
 
