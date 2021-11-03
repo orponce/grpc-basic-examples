@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Protos.Addressbook
+namespace Proto.Addressbook
 {
     class Program
     {

@@ -1,13 +1,12 @@
 // [START Declaration]
 syntax = "proto3";
 package python_protobuf_example;
-
 import "google/protobuf/timestamp.proto";
 // [END declaration]
 
 
 // C# Declaration
-option csharp_namespace = "Protos.Addressbook";
+option csharp_namespace = "Proto.Addressbook";
 
 // [START messages]
 message Person {

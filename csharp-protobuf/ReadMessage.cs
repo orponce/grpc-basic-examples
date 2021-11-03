@@ -2,9 +2,9 @@
 using System.IO;
 
 using Google.Protobuf;
-using static Protos.Addressbook.Person.Types;
+using static Proto.Addressbook.Person.Types;
 
-namespace Protos.Addressbook
+namespace Proto.Addressbook
 {
     class ReadMessage
     {

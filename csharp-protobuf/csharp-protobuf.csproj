@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>csharp_protobuf</RootNamespace>
-	<StartupObject>Protos.Addressbook.Program</StartupObject>
+	<StartupObject>Proto.Addressbook.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
