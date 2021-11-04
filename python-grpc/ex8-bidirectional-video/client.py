@@ -11,10 +11,25 @@ import numpy as np
 import cv2
 
 
-# Open Camera
-cap = cv2.VideoCapture(0)
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+class FrameStreamer:
+    """Object to handle the frame streamer
+    """
+    def __init__(self, path_to_video=0):
+        """If a video is to be streamed, set its path. Otherwise, 
+        the camera is used by default
+        """
+        if (path_to_video==0):
+            print("No path to video provided ... opening camera")
+        self.cap = cv2.VideoCapture(path_to_video)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+
+    def read(self):
+        return self.cap.read()
+
+    def close(self):
+        self.cap.release()  
+        cv2.destroyAllWindows()
 
 
 def generate_encoded_frame(frame):
@@ -35,18 +50,19 @@ def generate_encoded_frame(frame):
     yield video_pb2.Video(data = b64encoded)
 
 
-def run():
+def run(frame_streamer):
     channel = grpc.insecure_channel('localhost:50051')
     stub = video_pb2_grpc.MainServerStub(channel)
     print("-------- Client started streaming --------")
 
     counter = 0	
-    while True:
+    while (frame_streamer.cap.isOpened()):
         try:
             # Open the camera
-            ret, frame = cap.read()
+            ret, frame = frame_streamer.read()
             if ret != 1:
-                continue
+                print("Video ended")
+                break
             cv2.imshow('Capture Image', frame)
             k = cv2.waitKey(1)
             if k == 27:
@@ -62,16 +78,18 @@ def run():
                 counter += 1
                 if (counter%100) == 0:
                     print(f"Size of received message: {xval.shape}. First 5 values: {xval[:5]}")
-
         
         except grpc.RpcError as e:
             print(e.details())
             break
 
-
 if __name__ == '__main__':
-    run()
-
-
-cap.release()
-cv2.destroyAllWindows()
+    use_camera = False
+    if use_camera:
+        # Use camera
+        frame_streamer = FrameStreamer()
+    else:
+        # Use a video
+        frame_streamer = FrameStreamer("../data/sample.mp4")
+    run(frame_streamer)
+    frame_streamer.close()
