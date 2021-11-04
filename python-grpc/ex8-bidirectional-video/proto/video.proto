@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Service: client streaming video and receiving 1D data to plot
+service MainServer{
+	rpc getVideoStream (stream Video) returns (stream Data1D) {}
+}
+
+message Video {
+	// Video is encoded in bytes
+	bytes data = 1;
+}
+
+message Data1D {
+	// A numpy array (1D) is encoded in a string
+	string data = 1;
+}
