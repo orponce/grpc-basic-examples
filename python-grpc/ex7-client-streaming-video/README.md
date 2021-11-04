@@ -1,6 +1,8 @@
 ## Example: client streaming video to the server in Python
 
-This example shows a client that opens a camera using `OpenCV` and sends a stream of frames to the server. The server shows the images it receives as a continuous video.
+This example shows a client that opens a camera using `OpenCV` and sends a stream of frames to the server. The server shows the images it receives as a continuous video. 
+
+This example needs OpenCV. If it is not installed, install it with `conda install opencv` (assuming that conda is being used to manage Python packages).
 
 ### Generate from proto
 
