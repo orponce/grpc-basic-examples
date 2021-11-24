@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ex4ClientStreamingRpc", "Ex4ClientStreamingRpc\Ex4ClientStreamingRpc.csproj", "{EE700B13-D22B-4214-AF5F-8AC4C083BCED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EE700B13-D22B-4214-AF5F-8AC4C083BCED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE700B13-D22B-4214-AF5F-8AC4C083BCED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE700B13-D22B-4214-AF5F-8AC4C083BCED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE700B13-D22B-4214-AF5F-8AC4C083BCED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C5C51FEC-BE94-4EDB-BFD7-3BA01FD4F077}
+	EndGlobalSection
+EndGlobal
