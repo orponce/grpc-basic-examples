@@ -1,0 +1,27 @@
+﻿syntax = "proto3";
+
+package ex2routeguide;
+option csharp_namespace = "WFormsEx2UnaryRpc";
+
+service RouteGuide {
+
+  // Unary RPC (simple RPC).
+  // Obtains the feature at a given position. A feature with an empty name is
+  // returned if there's no feature at the given position.
+  rpc GetFeature(Point) returns (Feature) {}
+
+}
+
+// Points are represented as latitude-longitude pairs
+message Point {
+  int32 latitude = 1;
+  int32 longitude = 2;
+}
+
+// A feature names something at a given point.
+message Feature {
+  // The name of the feature.
+  string name = 1;
+  // The point where the feature is detected.
+  Point location = 2;
+}
