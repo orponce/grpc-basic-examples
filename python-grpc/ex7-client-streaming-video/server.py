@@ -80,6 +80,7 @@ class MainServerServicer(video_pb2_grpc.MainServerServicer):
     """
     def __init__(self):
         self.fpscounter = FrameRateCounter()
+        self.fcounter = 0
 
 
     def getStream(self, request_iterator, context):
@@ -93,6 +94,7 @@ class MainServerServicer(video_pb2_grpc.MainServerServicer):
             
             # Decode stream of bytes using Base64
             b64decoded = base64.b64decode(video.data)
+            self.fcounter += 1
             if (verbose):
                 print("base64 decoded size:", sys.getsizeof(b64decoded))
             
@@ -110,21 +112,13 @@ class MainServerServicer(video_pb2_grpc.MainServerServicer):
             if (True):
                 self.fpscounter.count()
                 
-            # Show fps 
-            # if (True):
-            # Compute the time
-            # frame_time_now = time.time()
-            #     print("FPS:{:.3}".format(1/(frame_time_now - self.last_frame_time)))
-            #     self.last_frame_time = frame_time_now
-            #     print("image shape: ", image.shape)
-
             # Send the image to a thread to be displayed
             if (show_image_in_server):
                 show.set(image)
             if (verbose):
                 print("Image has been shown")
             # Success
-            yield video_pb2.Reply(reply = 1)
+            yield video_pb2.Reply(reply = self.fcounter)
 
 
 show = ShowVideoStream()
