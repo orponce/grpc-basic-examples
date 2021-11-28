@@ -9,7 +9,7 @@ import video_pb2_grpc
 import cv2
 
 
-show_image_in_client = False
+show_image_in_client = True
 cap = cv2.VideoCapture(0)
 if (show_image_in_client):
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
@@ -39,7 +39,6 @@ def run():
     stub = video_pb2_grpc.MainServerStub(channel)
     print("-------- Client started streaming --------")
 
-    counter = 0	
     while True:
         try:
             # Open the camera
@@ -56,10 +55,8 @@ def run():
             encoded_frame = generate_encoded_frame(frame)
             responses = stub.getStream(encoded_frame)
             for res in responses:
-                counter += 1
-                if (counter%100) == 0:
-                    print(f"Sent and received {counter} frames")
-                    # print(res)
+                if (res.reply % 100) == 0:
+                    print(f"Sent and received {res.reply} frames")
         
         except grpc.RpcError as e:
             print(e.details())
