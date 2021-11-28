@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option csharp_namespace = "Ex7ClientStreamingVideo";
+
+// Service: client streaming
+service MainServer{
+	rpc getStream (stream Video) returns (stream Reply) {}
+}
+
+message Video {
+	bytes data = 1;
+}
+
+message Reply {
+	int32 reply = 1;
+}
