@@ -11,6 +11,8 @@ import numpy as np
 import cv2
 
 
+show_image_in_server = False
+
 class ShowVideoStream:
     def __init__(self):
         # Image to be displayed using OpenCV
@@ -45,11 +47,40 @@ class ShowVideoStream:
                     break
 
 
+class FrameRateCounter:
+    def __init__(self, frames_to_count = 30):
+        self.frames_to_count = frames_to_count    # Count time for every 30 frames
+        self.last_frame_time = 0
+        self.flag_first_frame = True
+        self.time_stored = np.zeros(self.frames_to_count)
+        self.num_frame = 0
+
+    def count(self, update_every_frame = False):
+        if (self.flag_first_frame):
+            self.last_frame_time = time.time()
+            self.flag_first_frame = False
+        else:
+            # Compute the time
+            frame_time_now = time.time()
+            fps = 1.0 / (frame_time_now - self.last_frame_time)
+            self.time_stored[self.num_frame] = fps
+            self.num_frame += 1
+            if (update_every_frame):
+                print("FPS:{:.3}".format(fps))
+            if (self.num_frame == self.frames_to_count):
+                mean = np.mean(self.time_stored)
+                std = np.std(self.time_stored)
+                print("fps: {:.2f}, std: {:.2f}".format(mean, std))
+                self.num_frame = 0
+            self.last_frame_time = frame_time_now
+            
+
 class MainServerServicer(video_pb2_grpc.MainServerServicer):
     """Main server servicer: displays the video received as a stream 
     """
     def __init__(self):
-        pass
+        self.fpscounter = FrameRateCounter()
+
 
     def getStream(self, request_iterator, context):
         verbose = False
@@ -75,8 +106,21 @@ class MainServerServicer(video_pb2_grpc.MainServerServicer):
             if (verbose):
                 print("image size : ", sys.getsizeof(image))
             
+            # Compute and show time (fps)
+            if (True):
+                self.fpscounter.count()
+                
+            # Show fps 
+            # if (True):
+            # Compute the time
+            # frame_time_now = time.time()
+            #     print("FPS:{:.3}".format(1/(frame_time_now - self.last_frame_time)))
+            #     self.last_frame_time = frame_time_now
+            #     print("image shape: ", image.shape)
+
             # Send the image to a thread to be displayed
-            show.set(image)
+            if (show_image_in_server):
+                show.set(image)
             if (verbose):
                 print("Image has been shown")
             # Success
@@ -100,5 +144,6 @@ def serve():
 
 
 if __name__ == '__main__':
-    show.start()
+    if (show_image_in_server):
+        show.start()
     serve()
