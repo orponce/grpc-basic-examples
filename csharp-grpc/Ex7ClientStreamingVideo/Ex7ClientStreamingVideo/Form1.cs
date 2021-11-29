@@ -51,9 +51,14 @@ namespace Ex7ClientStreamingVideo
         {
             if (client == null)
             {
+                // Start the connection with the server
                 var channel = GrpcChannel.ForAddress("http://localhost:50051");
                 client = new MainServer.MainServerClient(channel); 
                 textBox1.AppendText("Started client listening at localhost:5005" + Environment.NewLine);
+
+                // Send information about the client: 1 is C#
+                Options options = new Options { Language = 1 };
+                var response = client.ConfigureClient(options);
             }
             else
             {
@@ -87,7 +92,7 @@ namespace Ex7ClientStreamingVideo
                                      PictureBox pictureBox, VideoDevice camDevice)
         {
             // Request to the server
-            using var call = client.getStream();
+            using var call = client.SendStream();
 
             // Print messages?
             bool Verbose = false;
@@ -102,14 +107,16 @@ namespace Ex7ClientStreamingVideo
             {
                 while (await call.ResponseStream.MoveNext(cancellationToken))
                 {
-                    textBox.AppendText($"Received {call.ResponseStream.Current.Reply_.ToString()} " +
-                                        " frames" + Environment.NewLine);
+                    if (call.ResponseStream.Current.Data % 100 == 0)
+                    {
+                        textBox.AppendText($"Received {call.ResponseStream.Current.Data.ToString()} " +
+                                            " frames" + Environment.NewLine);
+                    }
                 }
             });
 
             // Send stream to the server
             textBox.AppendText("Starting to send messages..." + Environment.NewLine);
-            //for (int i = 0; i < 100; i++)
             while(!camDevice.stop)
             {
                 //var frameMat = capture.RetrieveMat();

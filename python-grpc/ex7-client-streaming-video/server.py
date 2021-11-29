@@ -11,7 +11,7 @@ import numpy as np
 import cv2
 
 
-show_image_in_server = False
+show_image_in_server = True
 
 class ShowVideoStream:
     def __init__(self):
@@ -81,9 +81,14 @@ class MainServerServicer(video_pb2_grpc.MainServerServicer):
     def __init__(self):
         self.fpscounter = FrameRateCounter()
         self.fcounter = 0
+        self.language = 1
+
+    def ConfigureClient(self, request, context):
+        self.language = request.language
+        return video_pb2.Reply(data = self.language)
 
 
-    def getStream(self, request_iterator, context):
+    def SendStream(self, request_iterator, context):
         verbose = False
         timer = 0
         for video in request_iterator:
@@ -92,8 +97,11 @@ class MainServerServicer(video_pb2_grpc.MainServerServicer):
                 print('process time = ' + str(time.process_time() - timer))
                 timer = time.process_time()
             
-            # Decode stream of bytes using Base64
-            b64decoded = base64.b64decode(video.data)
+            if (self.language == 0):
+                # Decode stream of bytes using Base64 (only if client is Python)
+                b64decoded = base64.b64decode(video.data)
+            else:
+                b64decoded = video.data
             self.fcounter += 1
             if (verbose):
                 print("base64 decoded size:", sys.getsizeof(b64decoded))
@@ -118,7 +126,7 @@ class MainServerServicer(video_pb2_grpc.MainServerServicer):
             if (verbose):
                 print("Image has been shown")
             # Success
-            yield video_pb2.Reply(reply = self.fcounter)
+            yield video_pb2.Reply(data = self.fcounter)
 
 
 show = ShowVideoStream()

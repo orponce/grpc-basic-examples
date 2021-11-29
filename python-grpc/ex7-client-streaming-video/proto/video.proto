@@ -1,8 +1,10 @@
 syntax = "proto3";
 
-// Service: client streaming
 service MainServer{
-	rpc getStream (stream Video) returns (stream Reply) {}
+	// Service: client streaming
+	rpc SendStream (stream Video) returns (stream Reply) {}
+	// Unary service
+	rpc ConfigureClient(Options) returns (Reply) {}
 }
 
 message Video {
@@ -10,5 +12,10 @@ message Video {
 }
 
 message Reply {
-	int32 reply = 1;
+	int32 data = 1;
+}
+
+message Options {
+	// language 0 is Python, 1 is C#
+	int32 language = 1;
 }

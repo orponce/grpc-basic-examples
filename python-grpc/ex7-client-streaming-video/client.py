@@ -37,8 +37,12 @@ def generate_encoded_frame(frame):
 def run():
     channel = grpc.insecure_channel('localhost:50051')
     stub = video_pb2_grpc.MainServerStub(channel)
-    print("-------- Client started streaming --------")
 
+    # Send information about the client language 
+    options = video_pb2.Options(language=0)
+    stub.ConfigureClient(options)
+
+    print("-------- Client started streaming --------")
     while True:
         try:
             # Open the camera
@@ -53,10 +57,10 @@ def run():
 
             # Send the stream to the server
             encoded_frame = generate_encoded_frame(frame)
-            responses = stub.getStream(encoded_frame)
+            responses = stub.SendStream(encoded_frame)
             for res in responses:
-                if (res.reply % 100) == 0:
-                    print(f"Sent and received {res.reply} frames")
+                if (res.data % 100) == 0:
+                    print(f"Sent and received {res.data} frames")
         
         except grpc.RpcError as e:
             print(e.details())
